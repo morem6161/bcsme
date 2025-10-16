@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - BCSME{% endblock %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h2>Admin Dashboard</h2>
+    <p>Welcome, {{ session.admin_username }}!</p>
+</div>
+
+<div class="dashboard-stats">
+    <div class="stat-card">
+        <h3>{{ pending|length }}</h3>
+        <p>Pending Applications</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ approved|length }}</h3>
+        <p>Approved Members</p>
+    </div>
+    <div class="stat-card stat-warning">
+        <h3>{{ sponsor_issues|length }}</h3>
+        <p>Sponsor Issues</p>
+    </div>
+</div>
+
+<div class="dashboard-actions">
+    <a href="{{ url_for('board_review') }}" class="btn btn-primary">📋 Generate Board Review List</a>
+    <a href="{{ url_for('member_directory') }}" class="btn btn-secondary">📖 View Member Directory</a>
+</div>
+
+{% if sponsor_issues %}
+<div class="alert-section">
+    <h3>⚠️ Sponsor Verification Issues</h3>
+    <p>The following applications have sponsor verification issues that need your attention:</p>
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Applicant</th>
+                <th>Category</th>
+                <th>Issue</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in sponsor_issues %}
+            <tr>
+                <td>{{ member.name }}</td>
+                <td>{{ member.membership_category }}</td>
+                <td>
+                    {% if member.sponsor1_status == 'not_found' %}
+                        Sponsor 1 ({{ member.sponsor1_name }}) not found in database<br>
+                    {% endif %}
+                    {% if member.sponsor2_status == 'not_found' %}
+                        Sponsor 2 ({{ member.sponsor2_name }}) not found in database
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('view_member', member_id=member.id) }}" class="btn btn-small">Review</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+<!-- Pending Applications -->
+<div class="section">
+    <h3>Pending Applications (Payment Completed)</h3>
+    {% if pending %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Category</th>
+                    <th>Fee</th>
+                    <th>Applied</th>
+                    <th>Payment</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in pending %}
+                <tr>
+                    <td>{{ member.name }}</td>
+                    <td>{{ member.email }}</td>
+                    <td>
+                        {{ member.membership_category }}
+                        {% if member.membership_category == 'Junior' %}
+                            <br><small>Sponsors: {{ member.sponsor1_name }}, {{ member.sponsor2_name }}</small>
+                        {% elif member.membership_category == 'Probationary' %}
+                            <br><small>Guardian: {{ member.parent_guardian_signature }}</small>
+                        {% endif %}
+                    </td>
+                    <td>${{ "%.2f"|format(member.membership_fee) }}</td>
+                    <td>{{ member.application_date.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <span class="badge badge-{{ 'success' if member.payment_status == 'completed' else 'warning' }}">
+                            {{ member.payment_status }}
+                        </span>
+                    </td>
+                    <td class="action-buttons">
+                        <a href="{{ url_for('view_member', member_id=member.id) }}" class="btn btn-small">View Details</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="empty-message">No pending applications at this time.</p>
+    {% endif %}
+</div>
+
+<!-- Recently Approved Members -->
+<div class="section">
+    <h3>Recently Approved Members</h3>
+    {% if approved %}
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Category</th>
+                    <th>Approved Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in approved[:10] %}
+                <tr>
+                    <td>{{ member.name }}</td>
+                    <td>{{ member.email }}</td>
+                    <td>{{ member.membership_category }}</td>
+                    <td>{{ member.approval_date.strftime('%Y-%m-%d') if member.approval_date else 'N/A' }}</td>
+                    <td>
+                        <a href="{{ url_for('view_member', member_id=member.id) }}" class="btn btn-small">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if approved|length > 10 %}
+            <p class="note">Showing 10 most recent. View all in <a href="{{ url_for('member_directory') }}">Member Directory</a>.</p>
+        {% endif %}
+    {% else %}
+        <p class="empty-message">No approved members yet.</p>
+    {% endif %}
+</div>
+
+<style>
+.dashboard-header {
+    margin-bottom: 30px;
+}
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.stat-card {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-left: 4px solid #2c5f2d;
+}
+
+.stat-card h3 {
+    font-size: 3em;
+    margin: 0;
+    color: #2c5f2d;
+}
+
+.stat-card p {
+    margin: 10px 0 0 0;
+    color: #666;
+}
+
+.stat-warning {
+    border-left-color: #ffc107;
+}
+
+.stat-warning h3 {
+    color: #ffc107;
+}
+
+.dashboard-actions {
+    display: flex;
+    gap: 15px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+.alert-section {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.section {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.data-table th {
+    background: #f8f9fa;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+    font-weight: 600;
+}
+
+.data-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.data-table tr:hover {
+    background: #f8f9fa;
+}
+
+.action-buttons {
+    white-space: nowrap;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 600;
+}
+
+.badge-success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge-warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.empty-message {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 0.9em;
+}
+</style>
+{% endblock %}

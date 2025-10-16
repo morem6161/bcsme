@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}BCSME Membership Application{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h2>Welcome to BCSME Membership Portal</h2>
+    <p>Join our community of model engineering enthusiasts!</p>
+</div>
+
+<div class="membership-info">
+    <h3>Membership Categories & Fees</h3>
+    
+    <div class="membership-grid">
+        <div class="membership-card">
+            <h4>Regular</h4>
+            <p class="age-range">19-64 years of age</p>
+            <p class="fee">$50/year</p>
+        </div>
+        
+        <div class="membership-card">
+            <h4>Senior</h4>
+            <p class="age-range">65+ years of age</p>
+            <p class="fee">$40/year</p>
+        </div>
+        
+        <div class="membership-card">
+            <h4>Associate</h4>
+            <p class="age-range">19+ years of age</p>
+            <p class="fee">$30/year</p>
+            <p class="note">*Ineligible for regular membership but interested in supporting the activities of the Society</p>
+        </div>
+        
+        <div class="membership-card">
+            <h4>Junior</h4>
+            <p class="age-range">14-18 years of age</p>
+            <p class="fee">$30/year</p>
+            <p class="note">**Requires the signature of 2 current member sponsors</p>
+        </div>
+        
+        <div class="membership-card">
+            <h4>Probationary</h4>
+            <p class="age-range">10-13 years of age</p>
+            <p class="fee">$30/year</p>
+            <p class="note">***Requires the signature of a Parent or Legal Guardian</p>
+        </div>
+    </div>
+</div>
+
+<div class="cta-section">
+    <h3>Ready to Join?</h3>
+    <p>Complete your membership application online. The process takes about 5 minutes.</p>
+    <a href="{{ url_for('apply') }}" class="btn btn-primary">Apply for Membership</a>
+</div>
+
+<div class="info-section">
+    <h3>What to Expect</h3>
+    <ol>
+        <li>Fill out the membership application form</li>
+        <li>Pay your annual dues securely through PayPal</li>
+        <li>Your application will be reviewed by the Board at our monthly meeting</li>
+        <li>You'll receive a confirmation email once approved</li>
+    </ol>
+    
+    <p><strong>Note:</strong> Membership is subject to approval by the Board of The BCSME.</p>
+</div>
+
+<div class="contact-section">
+    <h3>Questions?</h3>
+    <p>Contact us at <a href="mailto:secretary@bcsme.org">secretary@bcsme.org</a> or call (604) 291-0922</p>
+</div>
+{% endblock %}

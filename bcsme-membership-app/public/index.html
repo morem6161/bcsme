@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCSME Membership Application</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo-section">
+                <h1>BCSME Membership Application</h1>
+                <p class="subtitle">British Columbia Society of Model Engineers, est.1929</p>
+                <p class="contact-info">120 North Willingdon Avenue, Burnaby, B.C. V5C 6K1</p>
+                <p class="contact-info">(604) 291-0922 | secretary@bcsme.org</p>
+            </div>
+        </header>
+
+        <div id="successMessage" class="success-message" style="display: none;">
+            <h2>✓ Application Submitted Successfully!</h2>
+            <p id="successText"></p>
+        </div>
+
+        <form id="membershipForm" class="membership-form">
+            <!-- Personal Information -->
+            <section class="form-section">
+                <h2>Personal Information</h2>
+                
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="name">Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthdate">Birthdate *</label>
+                        <input type="date" id="birthdate" name="birthdate" required>
+                        <small>Required to determine membership category</small>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city">
+                    </div>
+                    <div class="form-group">
+                        <label for="province_state">Province/State</label>
+                        <input type="text" id="province_state" name="province_state">
+                    </div>
+                    <div class="form-group">
+                        <label for="postal_code">Postal/ZIP Code</label>
+                        <input type="text" id="postal_code" name="postal_code">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone_other">Phone</label>
+                        <input type="tel" id="phone_other" name="phone_other">
+                    </div>
+                    <div class="form-group">
+                        <label for="preferred_contact">Preferred Contact Method</label>
+                        <select id="preferred_contact" name="preferred_contact">
+                            <option value="email">Email</option>
+                            <option value="phone">Phone</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Membership Category -->
+            <section class="form-section">
+                <h2>Membership Category</h2>
+                <div id="membershipCategoryDisplay" class="membership-category-box">
+                    <p>Please enter your birthdate above to see your membership category and fee.</p>
+                </div>
+                <input type="hidden" id="membership_category" name="membership_category">
+                <input type="hidden" id="membership_fee" name="membership_fee">
+            </section>
+
+            <!-- Junior/Probationary Section (conditionally shown) -->
+            <section id="juniorSection" class="form-section" style="display: none;">
+                <h2>Junior Member Sponsors</h2>
+                <p class="info-text">Junior members (14-18 years) must have two sponsors who are current BCSME members in good standing.</p>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="junior_sponsor1">Sponsor 1 Name *</label>
+                        <input type="text" id="junior_sponsor1" name="junior_sponsor1">
+                    </div>
+                    <div class="form-group">
+                        <label for="junior_sponsor2">Sponsor 2 Name *</label>
+                        <input type="text" id="junior_sponsor2" name="junior_sponsor2">
+                    </div>
+                </div>
+            </section>
+
+            <section id="probationarySection" class="form-section" style="display: none;">
+                <h2>Parent/Legal Guardian</h2>
+                <p class="info-text">Probationary members (10-13 years) require the signature of a parent or legal guardian.</p>
+                
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="probationary_guardian">Parent/Legal Guardian Name *</label>
+                        <input type="text" id="probationary_guardian" name="probationary_guardian">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Areas of Interest -->
+            <section class="form-section">
+                <h2>Areas of Interest and/or Expertise</h2>
+                <p class="info-text">Check all that apply</p>
+                
+                <div class="checkbox-grid">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="interest" value="Locomotive Engineer">
+                        Locomotive Engineer
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="interest" value="TQ valid in BC">
+                        TQ valid in BC
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="interest" value="Conductor">
+                        Conductor
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="interest" value="Garden Railway">
+                        Garden Railway
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="interest" value="Grounds Work">
+                        Grounds Work
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="interest" value="Millwright">
+                        Millwright
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="interest" value="Gardening">
+                        Gardening
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="interest" value="Administration">
+                        Administration
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="interest" value="Social / Events">
+                        Social / Events
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="interest" value="IT Design / Support">
+                        IT Design / Support
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="interest" value="Business Development">
+                        Business Development
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="interest" value="Guest Services">
+                        Guest Services
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="interest" value="Comms / Social Media">
+                        Comms / Social Media
+                    </label>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full-width">
+                        <label for="other_interest">Other</label>
+                        <input type="text" id="other_interest" name="other_interest" placeholder="Please specify...">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Privacy -->
+            <section class="form-section">
+                <h2>Privacy</h2>
+                <div class="privacy-box">
+                    <p><strong>Privacy Policy:</strong> Your contact information is for the administration of The BCSME and, subject to the BC Privacy Act, RSBC 1996, c373, will not be shared without your permission.</p>
+                    
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="publish_in_directory" name="publish_in_directory" value="1">
+                        Yes, I would like my contact information published in the Society directory
+                    </label>
+                </div>
+            </section>
+
+            <!-- Signature -->
+            <section class="form-section">
+                <h2>Signature *</h2>
+                <p class="info-text">Please sign below using your mouse or touchscreen</p>
+                
+                <div class="signature-pad-container">
+                    <canvas id="signaturePad" width="600" height="200"></canvas>
+                    <button type="button" id="clearSignature" class="btn-secondary">Clear Signature</button>
+                </div>
+                <input type="hidden" id="signature_data" name="signature_data">
+            </section>
+
+            <!-- Submit -->
+            <section class="form-section">
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        Submit Application & Pay Membership Fee
+                    </button>
+                </div>
+                <p class="info-text center">
+                    Membership subject to approval by the Board of The BCSME. 
+                    You will be redirected to PayPal to complete your payment securely.
+                </p>
+            </section>
+        </form>
+    </div>
+
+    <script src="signature_pad.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
