@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCSME Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <h1>BCSME Admin Login</h1>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn-primary">Login</button>
+                <div id="loginError" class="error-message" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashboardScreen" style="display: none;">
+        <nav class="admin-nav">
+            <div class="nav-left">
+                <h1>BCSME Admin Dashboard</h1>
+            </div>
+            <div class="nav-right">
+                <span id="adminUsername"></span>
+                <button id="logoutBtn" class="btn-secondary">Logout</button>
+            </div>
+        </nav>
+
+        <div class="container">
+            <div class="tabs">
+                <button class="tab-button active" data-tab="pending">Pending Applications</button>
+                <button class="tab-button" data-tab="all">All Applications</button>
+                <button class="tab-button" data-tab="members">Members</button>
+                <button class="tab-button" data-tab="board-review">Board Review List</button>
+            </div>
+
+            <!-- Pending Applications Tab -->
+            <div id="pendingTab" class="tab-content active">
+                <h2>Pending Applications</h2>
+                <p class="info-text">Applications that have been paid and are awaiting board approval</p>
+                <div id="pendingApplicationsList" class="applications-list"></div>
+            </div>
+
+            <!-- All Applications Tab -->
+            <div id="allTab" class="tab-content">
+                <h2>All Applications</h2>
+                <div class="filter-controls">
+                    <label>
+                        <input type="checkbox" id="filterPaid" checked> Paid
+                    </label>
+                    <label>
+                        <input type="checkbox" id="filterPending" checked> Pending Payment
+                    </label>
+                    <label>
+                        <input type="checkbox" id="filterApproved" checked> Approved
+                    </label>
+                    <label>
+                        <input type="checkbox" id="filterRejected" checked> Rejected
+                    </label>
+                </div>
+                <div id="allApplicationsList" class="applications-list"></div>
+            </div>
+
+            <!-- Members Tab -->
+            <div id="membersTab" class="tab-content">
+                <h2>Current Members</h2>
+                <p class="info-text">Used for sponsor verification</p>
+                <div class="members-controls">
+                    <button id="addMemberBtn" class="btn-primary">Add Member Manually</button>
+                    <input type="text" id="memberSearch" placeholder="Search members...">
+                </div>
+                <div id="membersList" class="members-list"></div>
+            </div>
+
+            <!-- Board Review List Tab -->
+            <div id="boardReviewTab" class="tab-content">
+                <h2>Board Review List</h2>
+                <p class="info-text">Print this list for your monthly board meetings</p>
+                <button id="printBoardList" class="btn-primary">Print Board Review List</button>
+                <div id="boardReviewList" class="board-review-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Detail Modal -->
+    <div id="applicationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Application Details</h2>
+            <div id="applicationDetails"></div>
+            <div class="modal-actions">
+                <button id="approveBtn" class="btn-success">Approve Membership</button>
+                <button id="rejectBtn" class="btn-danger">Reject Application</button>
+                <button class="btn-secondary close-modal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Member Modal -->
+    <div id="addMemberModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add Member Manually</h2>
+            <form id="addMemberForm">
+                <div class="form-group">
+                    <label for="memberName">Name *</label>
+                    <input type="text" id="memberName" required>
+                </div>
+                <div class="form-group">
+                    <label for="memberEmail">Email *</label>
+                    <input type="email" id="memberEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="memberType">Membership Type</label>
+                    <select id="memberType">
+                        <option value="regular">Regular</option>
+                        <option value="senior">Senior</option>
+                        <option value="associate">Associate</option>
+                        <option value="junior">Junior</option>
+                        <option value="probationary">Probationary</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Add Member</button>
+                    <button type="button" class="btn-secondary close-modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

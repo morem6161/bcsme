@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block title %}View Member - {{ member.name }} - BCSME{% endblock %}
+
+{% block content %}
+<div class="member-detail">
+    <div class="detail-header">
+        <h2>Member Application Details</h2>
+        <div class="status-badge status-{{ member.status }}">
+            {{ member.status.upper() }}
+        </div>
+    </div>
+    
+    <div class="detail-section">
+        <h3>Personal Information</h3>
+        <div class="detail-grid">
+            <div><strong>Name:</strong> {{ member.name }}</div>
+            <div><strong>Email:</strong> {{ member.email }}</div>
+            <div><strong>Birthdate:</strong> {{ member.birthdate.strftime('%Y-%m-%d') if member.birthdate else 'Not provided' }}</div>
+            <div><strong>Signature:</strong> {{ member.signature }}</div>
+        </div>
+    </div>
+    
+    <div class="detail-section">
+        <h3>Contact Information</h3>
+        <div class="detail-grid">
+            <div><strong>Address:</strong> {{ member.address }}</div>
+            <div><strong>City:</strong> {{ member.city }}</div>
+            <div><strong>Province/State:</strong> {{ member.province_state }}</div>
+            <div><strong>Postal Code:</strong> {{ member.postal_code }}</div>
+            <div><strong>Preferred Contact:</strong> {{ member.preferred_contact or 'Not specified' }}</div>
+            <div><strong>Phone:</strong> {{ member.phone_other or 'Not provided' }}</div>
+        </div>
+    </div>
+    
+    <div class="detail-section">
+        <h3>Membership Details</h3>
+        <div class="detail-grid">
+            <div><strong>Category:</strong> {{ member.membership_category }}</div>
+            <div><strong>Annual Fee:</strong> ${{ "%.2f"|format(member.membership_fee) }}</div>
+            <div><strong>Application Date:</strong> {{ member.application_date.strftime('%Y-%m-%d %H:%M') }}</div>
+            <div><strong>Payment Status:</strong> 
+                <span class="badge badge-{{ 'success' if member.payment_status == 'completed' else 'warning' }}">
+                    {{ member.payment_status }}
+                </span>
+            </div>
+            {% if member.payment_id %}
+            <div class="full-width"><strong>Payment ID:</strong> {{ member.payment_id }}</div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="detail-section">
+        <h3>Areas of Interest</h3>
+        <div class="interests-list">
+            {% if member.interests %}
+                {% for interest in member.interests.split(',') %}
+                    <span class="interest-tag">{{ interest }}</span>
+                {% endfor %}
+            {% endif %}
+            {% if member.interests_other %}
+                <br><strong>Other:</strong> {{ member.interests_other }}
+            {% endif %}
+            {% if not member.interests and not member.interests_other %}
+                <p>No interests specified</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if member.membership_category == 'Junior' %}
+    <div class="detail-section special-section">
+        <h3>Junior Member Requirements</h3>
+        <div class="detail-grid">
+            <div>
+                <strong>Sponsor 1:</strong> {{ member.sponsor1_name }}
+                <span class="badge badge-{{ 'success' if member.sponsor1_status == 'verified' else 'warning' }}">
+                    {{ member.sponsor1_status or 'pending' }}
+                </span>
+            </div>
+            <div>
+                <strong>Sponsor 2:</strong> {{ member.sponsor2_name }}
+                <span class="badge badge-{{ 'success' if member.sponsor2_status == 'verified' else 'warning' }}">
+                    {{ member.sponsor2_status or 'pending' }}
+                </span>
+            </div>
+        </div>
+        {% if member.sponsor1_status == 'not_found' or member.sponsor2_status == 'not_found' %}
+        <div class="alert alert-warning">
+            ⚠️ One or more sponsors could not be found in the member database. Please verify manually.
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+    
+    {% if member.membership_category == 'Probationary' %}
+    <div class="detail-section special-section">
+        <h3>Probationary Member Requirements</h3>
+        <div class="detail-grid">
+            <div><strong>Parent/Guardian:</strong> {{ member.parent_guardian_signature }}</div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="detail-section">
+        <h3>Privacy Settings</h3>
+        <div>
+            <strong>Directory Publication Consent:</strong> 
+            {{ 'Yes' if member.directory_consent else 'No' }}
+        </div>
+    </div>
+    
+    {% if member.admin_notes %}
+    <div class="detail-section">
+        <h3>Admin Notes</h3>
+        <p>{{ member.admin_notes }}</p>
+    </div>
+    {% endif %}
+    
+    {% if member.status == 'pending' %}
+    <div class="action-section">
+        <h3>Board Actions</h3>
+        <form method="POST" action="{{ url_for('approve_member', member_id=member.id) }}" style="display: inline-block; margin-right: 15px;">
+            <label for="approve_notes">Approval Notes (optional):</label>
+            <textarea name="notes" id="approve_notes" rows="3" style="width: 100%; margin: 10px 0;"></textarea>
+            <button type="submit" class="btn btn-success" onclick="return confirm('Approve this membership application?')">
+                ✓ Approve Member
+            </button>
+        </form>
+        
+        <form method="POST" action="{{ url_for('reject_member', member_id=member.id) }}" style="display: inline-block;">
+            <label for="reject_notes">Rejection Reason (optional):</label>
+            <textarea name="notes" id="reject_notes" rows="3" style="width: 100%; margin: 10px 0;"></textarea>
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to reject this application?')">
+                ✗ Reject Application
+            </button>
+        </form>
+    </div>
+    {% endif %}
+    
+    <div class="back-link">
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">← Back to Dashboard</a>
+    </div>
+</div>
+
+<style>
+.member-detail {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.status-badge {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-approved {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-rejected {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.detail-section {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.special-section {
+    border-left: 4px solid #ffc107;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.detail-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+.interests-list {
+    margin-top: 15px;
+}
+
+.interest-tag {
+    display: inline-block;
+    background: #e9ecef;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin: 5px;
+    font-size: 0.9em;
+}
+
+.action-section {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 8px;
+    margin: 30px 0;
+    border: 2px solid #dee2e6;
+}
+
+.back-link {
+    margin: 30px 0;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+    border: none;
+}
+
+.btn-success:hover {
+    background: #218838;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+    border: none;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+}
+</style>
+{% endblock %}
